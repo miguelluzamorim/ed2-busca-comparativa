@@ -7,12 +7,12 @@
 
 ## Integrantes
 
-**Nome do time:** ____________________
+**Nome do time:** _______The Light_____________
 
 | Nome | Usuário do GitHub |
-| --- | --- |
-|  |  |
-|  |  |
+| Miguel | miguelluzamorim |
+| Sérgio | dinos320| 
+| Vinícius | viniciuszzz - lang |
 |  |  |
 |  |  |
 |  |  |
