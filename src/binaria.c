@@ -1,17 +1,23 @@
 #include "binaria.h"
 #include "medicao.h"
 
-/* ===================== TAREFA 2: BUSCA BINÁRIA =====================
-   v está ordenado por matrícula. Devolva a posição de mat ou -1.
-   Faça comparacoes++ UMA vez por elemento do meio examinado. */
-
-int busca_binaria(const Aluno *v, int n, int mat) {
-    /* TODO:
-       ini = 0, fim = n - 1;
-       enquanto ini <= fim:
-         meio = ini + (fim - ini) / 2;  comparacoes++;
-         se v[meio].matricula == mat: achou;
-         se for menor: procure à direita; senão, à esquerda. */
-    (void)v; (void)n; (void)mat;
-    return -1;
+int busca_binaria(Aluno *v, int n, long long matricula_busca) {
+    int ini = 0;
+    int fim = n - 1;
+    
+    while (ini <= fim) {
+        int meio = ini + (fim - ini) / 2;
+        
+        comparacoes++;
+        
+        if (v[meio].matricula == matricula_busca) {
+            return meio; // Retorna a posição do aluno
+        } else if (v[meio].matricula < matricula_busca) {
+            ini = meio + 1;
+        } else {
+            fim = meio - 1;
+        }
+    }
+    
+    return -1; 
 }
