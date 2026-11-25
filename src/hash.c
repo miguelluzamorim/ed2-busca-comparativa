@@ -2,46 +2,74 @@
 #include "hash.h"
 #include "medicao.h"
 
-/* ===================== TAREFA 3: TABELA HASH =====================
-   Encadeamento: cada posição da tabela é uma lista ligada de NoHash. */
+// Estrutura do nó da lista encadeada (exemplo comum)
+typedef struct NoHash {
+    long long matricula;
+    int pos; // posição do aluno no vetor principal
+    struct NoHash *prox;
+} NoHash;
 
-Hash *hash_cria(int m) {
-    /* TODO: aloque um Hash, guarde m, zere n e aloque o vetor lista com
-       m ponteiros NULL (use calloc). Devolva o ponteiro.
-       Enquanto devolver NULL, o programa pula o teste da hash. */
-    (void)m;
-    return NULL;
+struct TabelaHash {
+    NoHash **tabela;
+    int m; // tamanho da tabela (número primo)
+};
+
+int hash_funcao(long long chave, int m) {
+    return (int)(chave % m);
 }
 
-int hash_funcao(const Hash *h, int chave) {
-    /* TODO: método da divisão: chave % m */
-    (void)h; (void)chave;
-    return 0;
+void hash_insere(TabelaHash *h, long long matricula, int pos) {
+    int idx = hash_funcao(matricula, h->m);
+    
+    NoHash *novo = (NoHash *)malloc(sizeof(NoHash));
+    novo->matricula = matricula;
+    novo->pos = pos;
+    novo->prox = h->tabela[idx];
+    
+    h->tabela[idx] = novo;
 }
 
-void hash_insere(Hash *h, int chave, int pos) {
-    /* TODO: calcule i = hash_funcao(h, chave); crie um NoHash com chave e
-       pos e insira-o no INÍCIO da lista h->lista[i]. Aumente h->n. */
-    (void)h; (void)chave; (void)pos;
-}
-
-int hash_busca(const Hash *h, int chave) {
-    /* TODO: percorra a lista da posição hash_funcao(h, chave).
-       Faça comparacoes++ a cada nó visitado.
-       Achou: devolva p->pos. Chegou ao fim: devolva -1. */
-    (void)h; (void)chave;
+int hash_busca(TabelaHash *h, long long matricula_busca) {
+    int idx = hash_funcao(matricula_busca, h->m);
+    NoHash *atual = h->tabela[idx];
+    
+    while (atual != NULL) {
+        comparacoes++; // Conta cada nó visitado na lista
+        if (atual->matricula == matricula_busca) {
+            return atual->pos;
+        }
+        atual = atual->prox;
+    }
+    
     return -1;
 }
 
-int hash_maior_lista(const Hash *h) {
-    /* TODO: devolva o tamanho da maior lista da tabela. */
-    (void)h;
-    return 0;
+int hash_maior_lista(TabelaHash *h) {
+    int maior = 0;
+    for (int i = 0; i < h->m; i++) {
+        int tam = 0;
+        NoHash *atual = h->tabela[i];
+        while (atual != NULL) {
+            tam++;
+            atual = atual->prox;
+        }
+        if (tam > maior) {
+            maior = tam;
+        }
+    }
+    return maior;
 }
 
-void hash_libera(Hash *h) {
-    if (h == NULL) return;
-    /* TODO: libere todos os nós de todas as listas antes das linhas abaixo. */
-    free(h->lista);
+void hash_libera(TabelaHash *h) {
+    if (!h) return;
+    for (int i = 0; i < h->m; i++) {
+        NoHash *atual = h->tabela[i];
+        while (atual != NULL) {
+            NoHash *temp = atual;
+            atual = atual->prox;
+            free(temp);
+        }
+    }
+    free(h->tabela);
     free(h);
 }
